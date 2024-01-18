@@ -50,7 +50,7 @@ inline auto Secant::find_root(F&& f, double x1, double x2, size_t max_iter) cons
     for (auto k = 0u; k < max_iter; ++k) {
         auto x_next = this->__find_root_step_impl(f, x1, x2);
 
-        if (f(x_next) < this->_err) {
+        if (std::abs(f(x_next)) < this->_err) {
             return x_next;
         } else {
             x1 = x2;
