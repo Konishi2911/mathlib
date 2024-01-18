@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <functional>
+#include <cmath>
 #include "../../include/roots/secant.hpp"
 
 TEST(SecantTests, RootFindingTest) {
