@@ -41,7 +41,7 @@ private:
     auto __find_root_step_impl(F&& f, double x1, double x2) const noexcept -> double;
 };
 
-Secant::Secant(double error) noexcept: 
+inline Secant::Secant(double error) noexcept: 
     _err(error)
 { }
 
@@ -88,7 +88,7 @@ inline auto Secant::__find_root_step_impl(F &&f, double x1, double x2) const noe
 
 // ==== Secant::Info ==== //
 
-Secant::Info::Info(bool is_converged, uint64_t iter, double final_val, double final_err) noexcept:
+inline Secant::Info::Info(bool is_converged, uint64_t iter, double final_val, double final_err) noexcept:
     _is_converged(is_converged), _iter(iter), _final(final_val), _err(final_err)
 { }
 
