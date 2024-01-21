@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <numbers>
+#include <cmath>
 #include "../../include/integral/simpson.hpp"
 
 TEST(SimpsonIntegralTests, IntegralTest) {
