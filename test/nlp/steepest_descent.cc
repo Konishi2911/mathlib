@@ -13,6 +13,6 @@ TEST(SteepestDescentTest, QuadratureFuncTests) {
     static_assert(mathlib::nlp::CostFunc<decltype(cost_func), double>);
 
     auto sol = solver.solve(0.0, std::move(cost_func), 100);
-
+    ASSERT_TRUE(sol);
     EXPECT_NEAR(sol.sol(), 0.5, 1e-6);
 }
