@@ -9,3 +9,7 @@ gtest_discover_tests(secant_test)
 add_executable(simpson_test integral/simpson.cc)
 target_link_libraries(simpson_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(simpson_test)
+
+add_executable(steepest_descent_test nlp/steepest_descent.cc)
+target_link_libraries(steepest_descent_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
+gtest_discover_tests(steepest_descent_test)
