@@ -13,3 +13,7 @@ gtest_discover_tests(simpson_test)
 add_executable(steepest_descent_test nlp/steepest_descent.cc)
 target_link_libraries(steepest_descent_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(steepest_descent_test)
+
+add_executable(nelder_mead_test nlp/nelder_mead.cc)
+target_link_libraries(nelder_mead_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
+gtest_discover_tests(nelder_mead_test)
