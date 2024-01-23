@@ -12,7 +12,15 @@ TEST(NelderMeadTests, QuadratureFuncTests) {
 
     static_assert(mathlib::nlp::CostFunc<decltype(cost_func), double>);
 
-    auto sol = solver.solve(0.0, 1.0, std::move(cost_func), 100);
-    ASSERT_TRUE(sol);
-    EXPECT_NEAR(sol.sol(), 0.5, 1e-6);
+    {
+        auto sol = solver.solve(0.0, 0.1, std::move(cost_func), 1000);
+        ASSERT_TRUE(sol);
+        EXPECT_NEAR(sol.sol(), 0.5, 1e-6);
+    }
+
+    {
+        auto sol = solver.solve(9.0, 10.0, std::move(cost_func), 1000);
+        ASSERT_TRUE(sol);
+        EXPECT_NEAR(sol.sol(), 0.5, 1e-6);
+    }
 }

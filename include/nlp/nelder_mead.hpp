@@ -85,6 +85,14 @@ inline auto NelderMead::solve(T x1, T x2, F &&func, size_t max_iter) const -> Nl
                     verts.back() = std::make_pair(f_c, x_c);
                     continue;
                 }
+            } else {
+                auto dx = (verts.back().second - x_o);
+                auto x_c = x_o + this->_rho * dx;
+                auto f_c = func(x_c);
+                if (f_c < verts.back().first) {
+                    verts.back() = std::make_pair(f_c, x_c);
+                    continue;
+                }
             }
         }
         // Shrink
