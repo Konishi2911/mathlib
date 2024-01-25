@@ -50,7 +50,8 @@ inline auto Secant::find_root(F&& f, double x1, double x2, size_t max_iter) cons
     for (auto k = 0u; k < max_iter; ++k) {
         auto x_next = this->__find_root_step_impl(f, x1, x2);
 
-        if (std::abs(f(x_next)) < this->_err) {
+        auto err = std::abs(f(x_next));
+        if (err < this->_err) {
             return x_next;
         } else {
             x1 = x2;
@@ -67,15 +68,16 @@ inline auto Secant::find_root_info(F &&f, double x1, double x2, size_t max_iter)
     for (auto k = 0u; k < max_iter; ++k) {
         x_next = this->__find_root_step_impl(f, x1, x2);
 
-        auto err = f(x_next);
+        auto err = std::abs(f(x_next));
         if (err < this->_err) {
-            auto info = Info(true, x_next, err);
+            auto info = Info(true, k, x_next, err);
+            return info;
         } else {
             x1 = x2;
             x2 = x_next;
         }
     }
-    return Info(false, x_next, f(x_next));
+    return Info(false, max_iter, x_next, std::abs(f(x_next)));
 }
 
 template <std::invocable<double> F>
