@@ -97,7 +97,7 @@ inline auto NelderMead::solve(T x1, T x2, F &&func, size_t max_iter) const -> Nl
         }
         // Shrink
         for (auto i = 1u; i < dim + 1; ++i) {
-            auto dx = verts[i].second;
+            auto dx = verts[i].second - verts.front().second;
             auto x = verts.front().second + this->_sigma * dx;
             verts[i] = std::make_pair(func(x), x);
         }
