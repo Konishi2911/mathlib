@@ -37,3 +37,18 @@ TEST(LinearInterpolationTest, DuplicatedPointInterpolationTest) {
     EXPECT_DOUBLE_EQ(5.0, f(3.0));
     EXPECT_DOUBLE_EQ(7.0, f(4.0));
 }
+
+TEST(LinearInterpolationTest, DomainTest) {
+    auto data = std::vector {
+        std::make_pair(0.0, 1.0),
+        std::make_pair(0.5, -1.0),
+        std::make_pair(0.5, -2.0),
+        std::make_pair(1.0, 4.0),
+        std::make_pair(2.0, 3.0),
+        std::make_pair(4.0, 7.0),
+    };
+    auto f = mathlib::intrpl::Linear(data);
+
+    ASSERT_DOUBLE_EQ(0.0, f.domain().first);
+    ASSERT_DOUBLE_EQ(4.0, f.domain().second);
+}
