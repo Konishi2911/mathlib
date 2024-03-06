@@ -2,8 +2,8 @@
 #ifndef MATHLIB_NLP_NELDER_MEAD_HPP
 #define MATHLIB_NLP_NELDER_MEAD_HPP
 
-#include "cost_function.hpp"
-#include "solver_common.hpp"
+#include "mathlib/nlp/cost_function.hpp"
+#include "mathlib/nlp/solver_common.hpp"
 #include <concepts>
 #include <algorithm>
 #include <numeric>

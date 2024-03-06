@@ -3,7 +3,7 @@
 #define MATHLIB_NLP_COST_FUNCTION_HPP
 
 #include <concepts>
-#include "../../third_party/lalib/include/vec.hpp"
+#include "lalib/vec.hpp"
 
 namespace mathlib::nlp {
 

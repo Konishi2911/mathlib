@@ -6,9 +6,9 @@
 #include <vector>
 #include <utility>
 #include <concepts>
-#include "../../third_party/lalib/include/vec.hpp"
-#include "../../third_party/lalib/include/mat.hpp"
-#include "../../third_party/lalib/include/solver/tri_diag.hpp"
+#include "lalib/vec.hpp"
+#include "lalib/mat.hpp"
+#include "lalib/solver/tri_diag.hpp"
 
 namespace mathlib {
 

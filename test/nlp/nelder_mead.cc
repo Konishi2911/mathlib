@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../../include/nlp/nelder_mead.hpp"
+#include "mathlib/nlp/nelder_mead.hpp"
 
 
 auto quadrature_func(double x) noexcept -> double {

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../../include/interpolation/linear.hpp"
+#include "mathlib/interpolation/linear.hpp"
 #include <iostream>
 
 TEST(LinearInterpolationTest, InterpolationTest) {
