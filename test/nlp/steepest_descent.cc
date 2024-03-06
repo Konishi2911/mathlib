@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../../include/nlp/steepest_descent.hpp"
+#include "mathlib/nlp/steepest_descent.hpp"
 
 
 auto quadrature_func(double x) noexcept -> double {

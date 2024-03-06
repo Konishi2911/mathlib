@@ -3,9 +3,9 @@
 #define MATHLIB_NLP_STEEPEST_DESCENT_HPP
 
 #include <optional>
-#include "cost_function.hpp"
-#include "solver_common.hpp"
-#include "../../third_party/lalib/include/vec.hpp"
+#include "mathlib/nlp/cost_function.hpp"
+#include "mathlib/nlp/solver_common.hpp"
+#include "lalib/vec.hpp"
 
 namespace mathlib::nlp {
 

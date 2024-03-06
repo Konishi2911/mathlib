@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <numbers>
 #include <cmath>
-#include "../../include/integral/simpson.hpp"
+#include "mathlib/integral/simpson.hpp"
 
 TEST(SimpsonIntegralTests, IntegralTest) {
     auto int1 = mathlib::integral::Simpson().integrate(

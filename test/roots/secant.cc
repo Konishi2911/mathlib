@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <functional>
 #include <cmath>
-#include "../../include/roots/secant.hpp"
+#include "mathlib/roots/secant.hpp"
 
 TEST(SecantTests, RootFindingTest) {
     auto solver = mathlib::Secant(1e-6);

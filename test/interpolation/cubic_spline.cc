@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../../include/interpolation/cubic_spline.hpp"
+#include "mathlib/interpolation/cubic_spline.hpp"
 #include <iostream>
 
 template<typename T>
