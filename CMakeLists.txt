@@ -31,4 +31,4 @@ if (${GTest_FOUND})
 	add_subdirectory(test)
 endif()
 
-add_subdirectory(third_party/lalib)
+include(third_party/lalib/cmake/backend.cmake)
