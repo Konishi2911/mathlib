@@ -21,3 +21,7 @@ gtest_discover_tests(mathlib_steepest_descent_test)
 add_executable(mathlib_nelder_mead_test nlp/nelder_mead.cc)
 target_link_libraries(mathlib_nelder_mead_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(mathlib_nelder_mead_test)
+
+add_executable(mathlib_polynomial_test polynomial.cc)
+target_link_libraries(mathlib_polynomial_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
+gtest_discover_tests(mathlib_polynomial_test)
