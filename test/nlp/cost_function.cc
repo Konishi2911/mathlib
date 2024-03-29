@@ -88,21 +88,21 @@ TEST(NumericCostFuncTests, VecHessTest) {
 
     for (auto i = 0u; i < 10; ++i) {
         auto x = lalib::DynVecD::filled(4, rng(mt));
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 0), func.hessian(x)(0, 0), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 1), func.hessian(x)(0, 1), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 2), func.hessian(x)(0, 2), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 3), func.hessian(x)(0, 3), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 0), func.hessian(x)(1, 0), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 1), func.hessian(x)(1, 1), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 2), func.hessian(x)(1, 2), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 0), func.hessian(x)(2, 0), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 1), func.hessian(x)(2, 1), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 2), func.hessian(x)(2, 2), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 3), func.hessian(x)(2, 3), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 0), func.hessian(x)(3, 0), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 1), func.hessian(x)(3, 1), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 2), func.hessian(x)(3, 2), 1e-1);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 3), func.hessian(x)(3, 3), 1e-1);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 0), func.hessian(x)(0, 0), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 1), func.hessian(x)(0, 1), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 2), func.hessian(x)(0, 2), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 3), func.hessian(x)(0, 3), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 0), func.hessian(x)(1, 0), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 1), func.hessian(x)(1, 1), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 2), func.hessian(x)(1, 2), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 1e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 0), func.hessian(x)(2, 0), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 1), func.hessian(x)(2, 1), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 2), func.hessian(x)(2, 2), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 3), func.hessian(x)(2, 3), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 0), func.hessian(x)(3, 0), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 1), func.hessian(x)(3, 1), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 2), func.hessian(x)(3, 2), 1e-2);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 3), func.hessian(x)(3, 3), 1e-2);
     }
 }

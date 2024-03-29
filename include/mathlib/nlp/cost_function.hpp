@@ -83,7 +83,7 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
                 auto x3 = x;    x3[i] -= this->_dx;     x3[j] += this->_dx;
                 auto x4 = x;    x4[i] -= this->_dx;     x4[j] -= this->_dx;
 
-                hess(i, j) = (this->_func(x1) - this->_func(x2) - this->_func(x3) + this->_func(x4)) / (4.0 * this->_dx * this->_dx);
+                hess(i, j) = ((this->_func(x1) + this->_func(x4)) - (this->_func(x2) + this->_func(x3))) / (4.0 * this->_dx * this->_dx);
                 hess(j, i) = hess(i, j);
             }
         }
