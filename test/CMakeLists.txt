@@ -22,6 +22,10 @@ add_executable(mathlib_steepest_descent_test nlp/steepest_descent.cc)
 target_link_libraries(mathlib_steepest_descent_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(mathlib_steepest_descent_test)
 
+add_executable(mathlib_lm_test nlp/levenberg_marquardt.cc)
+target_link_libraries(mathlib_lm_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
+gtest_discover_tests(mathlib_lm_test)
+
 add_executable(mathlib_nelder_mead_test nlp/nelder_mead.cc)
 target_link_libraries(mathlib_nelder_mead_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(mathlib_nelder_mead_test)

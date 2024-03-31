@@ -3,12 +3,13 @@
 #define MATHLIB_NLP_SOLVER_CONCEPT_HPP
 
 #include <concepts>
+#include <cstdint>
 
 namespace mathlib::nlp {
 
 template<typename T>
 struct NlpResult {
-    NlpResult(bool is_converged, uint64_t iter, T sol, double final_cost, double final_err) noexcept;
+    NlpResult(bool is_converged, uint64_t iter, T sol, double final_cost, double final_residual) noexcept;
 
     auto is_converged() const noexcept -> bool;
     auto final_iter() const noexcept -> uint64_t;
