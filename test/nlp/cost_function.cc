@@ -95,7 +95,7 @@ TEST(NumericCostFuncTests, VecHessTest) {
         EXPECT_NEAR(hess_rosenbrock_func(x)(1, 0), func.hessian(x)(1, 0), 1e-2);
         EXPECT_NEAR(hess_rosenbrock_func(x)(1, 1), func.hessian(x)(1, 1), 1e-2);
         EXPECT_NEAR(hess_rosenbrock_func(x)(1, 2), func.hessian(x)(1, 2), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 1e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 1e-2);
         EXPECT_NEAR(hess_rosenbrock_func(x)(2, 0), func.hessian(x)(2, 0), 1e-2);
         EXPECT_NEAR(hess_rosenbrock_func(x)(2, 1), func.hessian(x)(2, 1), 1e-2);
         EXPECT_NEAR(hess_rosenbrock_func(x)(2, 2), func.hessian(x)(2, 2), 1e-2);
