@@ -32,7 +32,7 @@ namespace _lm_ {
     struct _LMSubSolver_<lalib::DynVec<T>> {
         static auto solve(double lambda, const lalib::DynVec<T>&, const lalib::DynVec<T>& grad, const lalib::DynMat<T>& hess) noexcept -> lalib::DynVec<T> {
             auto l = lalib::DynMatD::diag(lambda, hess.shape().first);
-            auto cholesky = lalib::solver::DynCholeskyFactorization(hess + l);
+            auto cholesky = lalib::solver::DynModCholeskyFactorization(hess + l);
             auto s = cholesky.solve_linear(-grad);
             return s;
         }
