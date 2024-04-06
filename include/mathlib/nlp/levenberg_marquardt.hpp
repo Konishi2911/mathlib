@@ -65,6 +65,7 @@ inline LevenbregMarquardt::LevenbregMarquardt() noexcept {}
 
 template<typename T, CostFunc<T> F>
 inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double cost_resi, double params_resi) const -> NlpResult<T> {
+    const auto div_crit = 1e+30;
     const auto nu = 2.0;
 	auto x = init;
 	auto lambda = 1.0;
@@ -106,9 +107,9 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
             }
 		} else {
 			lambda *= nu;
-            auto s_relax = _lm_::_LMSubSolver_<T>::solve(lambda, x, grad, hessian);
-            x = x + s_relax;
-            cost = func(x);
+            --k;
+
+            if (lambda > div_crit) { break; }
 		}
 	}
     auto result = NlpResult<T>(false, k, x, cost, std::abs(cost - prev_cost));
