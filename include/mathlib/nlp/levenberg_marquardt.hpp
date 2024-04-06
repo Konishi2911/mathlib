@@ -86,6 +86,8 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
 
 		// Update trust region
 		if (cost_slow < cost) {
+            prev_x = x;
+            prev_cost = cost;
 			if (cost_fast < cost_slow) {
 				lambda /= nu;
 				x = x_fast;
@@ -94,23 +96,20 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
 				x = x_slow;
 				cost = cost_slow;
 			}
+            
+            // Convergence check
+            auto resi_x = _lm_::params_resi2(prev_x, x);
+            auto resi = std::abs(cost - prev_cost);
+            if (resi < cost_resi && resi_x < params_resi) { 
+                auto result = NlpResult<T>(true, k, x, cost, resi); 
+                return result;
+            }
 		} else {
 			lambda *= nu;
             auto s_relax = _lm_::_LMSubSolver_<T>::solve(lambda, x, grad, hessian);
             x = x + s_relax;
             cost = func(x);
 		}
-
-        // Convergence check
-        auto resi_x = _lm_::params_resi2(prev_x, x);
-        auto resi = std::abs(cost - prev_cost);
-        if (resi < cost_resi && resi_x < params_resi) { 
-            auto result = NlpResult<T>(true, k, x, cost, resi); 
-            return result;
-        } else {
-            prev_x = x;
-            prev_cost = cost;
-        }
 	}
     auto result = NlpResult<T>(false, k, x, cost, std::abs(cost - prev_cost));
     return result;
