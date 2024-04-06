@@ -20,7 +20,7 @@ TEST(LevenbergMarquardtTests, QuadratureFuncTests) {
 
     static_assert(mathlib::nlp::CostFunc<decltype(cost_func), double>);
 
-    auto sol = solver.solve(0.0, std::move(cost_func), 100, 1e-6);
+    auto sol = solver.solve(0.0, std::move(cost_func), 100, 1e-6, 1e-6);
     ASSERT_TRUE(sol);
     EXPECT_NEAR(sol.sol(), 0.5, 2e-5);
     EXPECT_LE(sol.final_error(), 1e-6);
@@ -33,7 +33,7 @@ TEST(LevenbergMarquardtTests, RosenbrockFuncTests) {
     static_assert(mathlib::nlp::CostFunc<decltype(cost_func), lalib::DynVecD>);
 
     auto init = lalib::DynVecD::filled(3, 4.0);
-    auto sol = solver.solve(init, std::move(cost_func), 100, 1e-6);
+    auto sol = solver.solve(init, std::move(cost_func), 100, 1e-6, 1e-6);
     ASSERT_TRUE(sol);
     EXPECT_NEAR(sol.sol()[0], 1.0, 2e-5);
     EXPECT_NEAR(sol.sol()[1], 1.0, 2e-5);
