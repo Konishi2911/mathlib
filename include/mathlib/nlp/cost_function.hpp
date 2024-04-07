@@ -23,9 +23,10 @@ template<std::floating_point T, std::invocable<T> F>
 struct NumericCostFunc<T, F> {
     using Grad = T;
 
-    NumericCostFunc(F&& func, T dx) noexcept: 
+    NumericCostFunc(F&& func, T grad_dx, T hess_dx) noexcept: 
         _func(std::forward<F>(func)), 
-        _dx(dx)
+        _grad_dx(grad_dx),
+        _hess_dx(hess_dx)
     {}
 
     auto operator()(const T& x) const -> double { 
@@ -33,18 +34,19 @@ struct NumericCostFunc<T, F> {
     }
 
     auto grad(const T& x) const -> Grad {
-        auto df = (this->_func(x + this->_dx) - this->_func(x - this->_dx)) / (2.0 * this->_dx);
+        auto df = (this->_func(x + this->_grad_dx) - this->_func(x - this->_grad_dx)) / (2.0 * this->_grad_dx);
         return df;
     }
 
     auto hessian(const T& x) const -> T {
-        auto ddf = (this->_func(x + this->_dx) - 2.0 * this->_func(x) + this->_func(x - this->_dx)) / (this->_dx * this->_dx);
+        auto ddf = (this->_func(x + this->_hess_dx) - 2.0 * this->_func(x) + this->_func(x - this->_hess_dx)) / (this->_hess_dx * this->_hess_dx);
         return ddf;
     }
 
 private:
     F _func;
-    T _dx;
+    T _grad_dx;
+    T _hess_dx;
 };
 
 
@@ -52,9 +54,10 @@ template<std::floating_point T, std::invocable<lalib::DynVec<T>> F>
 struct NumericCostFunc<lalib::DynVec<T>, F> {
     using Grad = lalib::DynVec<T>;
 
-    NumericCostFunc(F&& func, T dx) noexcept: 
+    NumericCostFunc(F&& func, T grad_dx, T hess_dx) noexcept: 
         _func(std::forward<F>(func)), 
-        _dx(dx)
+        _grad_dx(grad_dx),
+        _hess_dx(hess_dx)
     {}
 
     auto operator()(const lalib::DynVec<T>& x) const -> double { 
@@ -65,9 +68,9 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto grad = std::vector<double>();
         grad.reserve(x.size());
         for (auto i = 0u; i < x.size(); ++i) {
-            auto xp = x;    xp[i] += this->_dx;
-            auto xn = x;    xn[i] -= this->_dx;
-            auto df = (this->_func(xp) - this->_func(xn)) / (2.0 * this->_dx);
+            auto xp = x;    xp[i] += this->_grad_dx;
+            auto xn = x;    xn[i] -= this->_grad_dx;
+            auto df = (this->_func(xp) - this->_func(xn)) / (2.0 * this->_grad_dx);
             grad.emplace_back(std::move(df));
         }
         return lalib::DynVec<T>(std::move(grad));
@@ -78,16 +81,17 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
         for (auto i = 0u; i < x.size(); ++i) {
             for (auto j = 0u; j <= i; ++j) {
-                auto x1 = x;    x1[i] += this->_dx;     x1[j] += this->_dx;
-                auto x2 = x;    x2[i] += this->_dx;     x2[j] -= this->_dx;
-                auto x3 = x;    x3[i] -= this->_dx;     x3[j] += this->_dx;
-                auto x4 = x;    x4[i] -= this->_dx;     x4[j] -= this->_dx;
+                auto x1 = x;    x1[i] += this->_hess_dx;     x1[j] += this->_hess_dx;
+                auto x2 = x;    x2[i] += this->_hess_dx;     x2[j] -= this->_hess_dx;
+                auto x3 = x;    x3[i] -= this->_hess_dx;     x3[j] += this->_hess_dx;
+                auto x4 = x;    x4[i] -= this->_hess_dx;     x4[j] -= this->_hess_dx;
                 auto f1 = this->_func(x1);
                 auto f2 = this->_func(x2);
                 auto f3 = this->_func(x3);
                 auto f4 = this->_func(x4);
 
-                hess(i, j) = ((f1 + f4) - (f2 + f3)) / (4.0 * this->_dx * this->_dx);
+                auto ddx = this->_hess_dx * this->_hess_dx;
+                hess(i, j) = ((f1 + f4) / ddx - (f2 + f3) / ddx) / 4.0;
                 hess(j, i) = hess(i, j);
             }
         }
@@ -96,7 +100,8 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
 
 private:
     F _func;
-    T _dx;
+    T _grad_dx;
+    T _hess_dx;
 };
 
 }
