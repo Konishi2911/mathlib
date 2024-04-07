@@ -14,7 +14,7 @@ struct LevenbregMarquardt {
     LevenbregMarquardt() noexcept;
 
     template<typename T, CostFunc<T> F>
-    auto solve(T init, F&& func, size_t max_iter, double cost_resi, double params_resi) const -> NlpResult<T>;
+    auto solve(T init, F&& func, size_t max_iter, double cost_resi, double params_resi, double grad_crit) const -> NlpResult<T>;
 };
 
 namespace _lm_ {
@@ -56,15 +56,26 @@ namespace _lm_ {
     template<std::floating_point T>
     auto params_resi2(const lalib::DynVec<T> &prev, const lalib::DynVec<T> &curr) noexcept -> double {
         auto resi = curr - prev;
-        auto resi_tot = resi.dot(resi);
+        auto resi_tot = resi.dot(resi) / resi.size();
         return resi_tot;
+    }
+
+    template<std::floating_point T>
+    auto grad_crit(const T& grad) noexcept -> double {
+        return grad;
+    }
+
+    template<std::floating_point T>
+    auto grad_crit(const lalib::DynVec<T> &grad) noexcept -> double {
+        auto gc = grad.norm2() / grad.size();
+        return gc;
     }
 }
 
 inline LevenbregMarquardt::LevenbregMarquardt() noexcept {}
 
 template<typename T, CostFunc<T> F>
-inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double cost_resi, double params_resi) const -> NlpResult<T> {
+inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double cost_resi, double params_resi, double grad_crit) const -> NlpResult<T> {
     const auto div_crit = 1e+30;
     const auto nu = 2.0;
 	auto x = init;
@@ -101,7 +112,8 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
             // Convergence check
             auto resi_x = _lm_::params_resi2(prev_x, x);
             auto resi = std::abs(cost - prev_cost);
-            if (resi < cost_resi && resi_x < params_resi) { 
+            auto gc = _lm_::grad_crit(grad);
+            if (resi < cost_resi && resi_x < params_resi && gc < grad_crit) { 
                 auto result = NlpResult<T>(true, k, x, cost, resi); 
                 return result;
             }
