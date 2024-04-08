@@ -1,5 +1,6 @@
 #pragma once
 #include "lalib/mat/dyn_mat.hpp"
+#include <limits>
 #ifndef MATHLIB_NLP_COST_FUNCTION_HPP
 #define MATHLIB_NLP_COST_FUNCTION_HPP
 
@@ -68,9 +69,12 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto grad = std::vector<double>();
         grad.reserve(x.size());
         for (auto i = 0u; i < x.size(); ++i) {
-            auto xp = x;    xp[i] += this->_grad_dx;
-            auto xn = x;    xn[i] -= this->_grad_dx;
-            auto df = (this->_func(xp) - this->_func(xn)) / (2.0 * this->_grad_dx);
+            auto rdx = x[i] > 4.0 * std::numeric_limits<T>::epsilon() ? x[i] * this->_grad_dx: this->_grad_dx;
+            auto xp = x;    xp[i] += rdx;
+            auto xn = x;    xn[i] -= rdx;
+            auto fp = this->_func(xp);
+            auto fn = this->_func(xn);
+            auto df = 0.5 * (fp / rdx - fn / rdx);
             grad.emplace_back(std::move(df));
         }
         return lalib::DynVec<T>(std::move(grad));
@@ -80,18 +84,19 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto n = x.size();
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
         for (auto i = 0u; i < x.size(); ++i) {
+            auto rdx = x[i] > 4.0 * std::numeric_limits<T>::epsilon() ? x[i] * this->_hess_dx: this->_hess_dx;
             for (auto j = 0u; j <= i; ++j) {
-                auto x1 = x;    x1[i] += this->_hess_dx;     x1[j] += this->_hess_dx;
-                auto x2 = x;    x2[i] += this->_hess_dx;     x2[j] -= this->_hess_dx;
-                auto x3 = x;    x3[i] -= this->_hess_dx;     x3[j] += this->_hess_dx;
-                auto x4 = x;    x4[i] -= this->_hess_dx;     x4[j] -= this->_hess_dx;
+                auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
+                auto x2 = x;    x2[i] += rdx;     x2[j] -= rdx;
+                auto x3 = x;    x3[i] -= rdx;     x3[j] += rdx;
+                auto x4 = x;    x4[i] -= rdx;     x4[j] -= rdx;
                 auto f1 = this->_func(x1);
                 auto f2 = this->_func(x2);
                 auto f3 = this->_func(x3);
                 auto f4 = this->_func(x4);
 
-                auto ddx = this->_hess_dx * this->_hess_dx;
-                hess(i, j) = ((f1 + f4) / ddx - (f2 + f3) / ddx) / 4.0;
+                auto ddx = rdx * rdx;
+                hess(i, j) = 0.25 * ((f1 + f4) / ddx - (f2 + f3) / ddx);
                 hess(j, i) = hess(i, j);
             }
         }
