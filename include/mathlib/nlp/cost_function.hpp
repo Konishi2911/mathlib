@@ -70,7 +70,7 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         grad.reserve(x.size());
         for (auto i = 0u; i < x.size(); ++i) {
             auto rdx = std::abs(x[i]) > 4.0 * std::numeric_limits<T>::epsilon() ? 
-                x[i] * this->_grad_dx: 
+                std::abs(x[i]) * this->_grad_dx: 
                 this->_grad_dx;
             auto xp = x;    xp[i] += rdx;
             auto xn = x;    xn[i] -= rdx;
@@ -87,7 +87,7 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
         for (auto i = 0u; i < x.size(); ++i) {
             auto rdx = std::abs(x[i]) > 4.0 * std::numeric_limits<T>::epsilon() ? 
-                x[i] * this->_hess_dx :
+                std::abs(x[i]) * this->_hess_dx :
                 this->_hess_dx;
             for (auto j = 0u; j <= i; ++j) {
                 auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
