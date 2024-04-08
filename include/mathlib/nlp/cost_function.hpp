@@ -69,7 +69,9 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto grad = std::vector<double>();
         grad.reserve(x.size());
         for (auto i = 0u; i < x.size(); ++i) {
-            auto rdx = x[i] > 4.0 * std::numeric_limits<T>::epsilon() ? x[i] * this->_grad_dx: this->_grad_dx;
+            auto rdx = std::abs(x[i] > 4.0 * std::numeric_limits<T>::epsilon()) ? 
+                x[i] * this->_grad_dx: 
+                this->_grad_dx;
             auto xp = x;    xp[i] += rdx;
             auto xn = x;    xn[i] -= rdx;
             auto fp = this->_func(xp);
@@ -84,7 +86,9 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto n = x.size();
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
         for (auto i = 0u; i < x.size(); ++i) {
-            auto rdx = x[i] > 4.0 * std::numeric_limits<T>::epsilon() ? x[i] * this->_hess_dx: this->_hess_dx;
+            auto rdx = std::abs(x[i] > 4.0 * std::numeric_limits<T>::epsilon()) ? 
+                x[i] * this->_hess_dx :
+                this->_hess_dx;
             for (auto j = 0u; j <= i; ++j) {
                 auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
                 auto x2 = x;    x2[i] += rdx;     x2[j] -= rdx;
