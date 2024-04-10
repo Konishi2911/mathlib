@@ -47,7 +47,7 @@ auto hess_rosenbrock_func(const lalib::DynVecD& x) noexcept -> lalib::DynMatD {
 TEST(NumericCostFuncTests, DoubleGradTest) {
     auto mt = std::mt19937(std::random_device()());
     auto rng = std::uniform_real_distribution<double>(-10, 10);
-    auto func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5);
+    auto func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5, 1e-4);
 
     for (auto i = 0u; i < 10; ++i) {
         auto x = rng(mt);
@@ -58,7 +58,7 @@ TEST(NumericCostFuncTests, DoubleGradTest) {
 TEST(NumericCostFuncTests, DoubleHessTest) {
     auto mt = std::mt19937(std::random_device()());
     auto rng = std::uniform_real_distribution<double>(-10, 10);
-    auto func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5);
+    auto func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5, 1e-4);
 
     for (auto i = 0u; i < 10; ++i) {
         auto x = rng(mt);
@@ -69,7 +69,7 @@ TEST(NumericCostFuncTests, DoubleHessTest) {
 TEST(NumericCostFuncTests, VecGradTest) {
     auto mt = std::mt19937(std::random_device()());
     auto rng = std::uniform_real_distribution<double>(-5, 5);
-    auto func = mathlib::nlp::NumericCostFunc<lalib::DynVecD, double(*)(const lalib::DynVecD&)>(rosenbrock_func, 1e-5);
+    auto func = mathlib::nlp::NumericCostFunc<lalib::DynVecD, double(*)(const lalib::DynVecD&)>(rosenbrock_func, 1e-5, 1e-4);
 
     for (auto i = 0u; i < 10; ++i) {
         auto x = lalib::DynVecD::filled(5, rng(mt));
@@ -84,25 +84,26 @@ TEST(NumericCostFuncTests, VecGradTest) {
 TEST(NumericCostFuncTests, VecHessTest) {
     auto mt = std::mt19937(std::random_device()());
     auto rng = std::uniform_real_distribution<double>(-5, 5);
-    auto func = mathlib::nlp::NumericCostFunc<lalib::DynVecD, double(*)(const lalib::DynVecD&)>(rosenbrock_func, 1e-4);
+    auto func = mathlib::nlp::NumericCostFunc<lalib::DynVecD, double(*)(const lalib::DynVecD&)>(rosenbrock_func, 1e-5, 1e-4);
 
     for (auto i = 0u; i < 10; ++i) {
-        auto x = lalib::DynVecD::filled(4, rng(mt));
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 0), func.hessian(x)(0, 0), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 1), func.hessian(x)(0, 1), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 2), func.hessian(x)(0, 2), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 3), func.hessian(x)(0, 3), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 0), func.hessian(x)(1, 0), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 1), func.hessian(x)(1, 1), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 2), func.hessian(x)(1, 2), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 0), func.hessian(x)(2, 0), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 1), func.hessian(x)(2, 1), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 2), func.hessian(x)(2, 2), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 3), func.hessian(x)(2, 3), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 0), func.hessian(x)(3, 0), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 1), func.hessian(x)(3, 1), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 2), func.hessian(x)(3, 2), 1e-2);
-        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 3), func.hessian(x)(3, 3), 1e-2);
+        auto x = lalib::DynVecD::filled(4, 0.0);
+        for (auto&& xe: x) { xe = rng(mt); }
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 0), func.hessian(x)(0, 0), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 1), func.hessian(x)(0, 1), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 2), func.hessian(x)(0, 2), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(0, 3), func.hessian(x)(0, 3), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 0), func.hessian(x)(1, 0), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 1), func.hessian(x)(1, 1), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 2), func.hessian(x)(1, 2), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(1, 3), func.hessian(x)(1, 3), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 0), func.hessian(x)(2, 0), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 1), func.hessian(x)(2, 1), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 2), func.hessian(x)(2, 2), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(2, 3), func.hessian(x)(2, 3), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 0), func.hessian(x)(3, 0), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 1), func.hessian(x)(3, 1), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 2), func.hessian(x)(3, 2), 2e-3);
+        EXPECT_NEAR(hess_rosenbrock_func(x)(3, 3), func.hessian(x)(3, 3), 2e-3);
     }
 }

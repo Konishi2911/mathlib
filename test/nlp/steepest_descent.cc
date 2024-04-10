@@ -8,7 +8,7 @@ auto quadrature_func(double x) noexcept -> double {
 
 TEST(SteepestDescentTest, QuadratureFuncTests) {
     auto solver = mathlib::nlp::SteepestDescent(1e-6);
-    auto cost_func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5);
+    auto cost_func = mathlib::nlp::NumericCostFunc<double, double(*)(double)>(quadrature_func, 1e-5, 1e-4);
 
     static_assert(mathlib::nlp::CostFunc<decltype(cost_func), double>);
 
