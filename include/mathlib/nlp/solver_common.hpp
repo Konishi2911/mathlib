@@ -4,6 +4,8 @@
 
 #include <concepts>
 #include <cstdint>
+#include <numeric>
+#include "lalib/vec.hpp"
 
 namespace mathlib::nlp {
 
@@ -27,6 +29,40 @@ private:
     double _err;
 };
 
+namespace _internal_ {
+    template<std::floating_point T>
+    auto infinity(const T&) noexcept -> T {
+        return std::numeric_limits<T>::infinity();
+    }
+    
+    template<std::floating_point T>
+    auto infinity(const lalib::DynVec<T>& x) noexcept -> lalib::DynVec<T> {
+        return lalib::DynVec<T>::filled(x.size(), std::numeric_limits<T>::infinity());
+    }
+
+    template<std::floating_point T>
+    auto params_resi2(const T& prev, const T& curr) noexcept -> double {
+        return std::pow(curr - prev, 2);
+    }
+
+    template<std::floating_point T>
+    auto params_resi2(const lalib::DynVec<T> &prev, const lalib::DynVec<T> &curr) noexcept -> double {
+        auto resi = curr - prev;
+        auto resi_tot = resi.dot(resi) / resi.size();
+        return resi_tot;
+    }
+
+    template<std::floating_point T>
+    auto grad_crit(const T& grad) noexcept -> double {
+        return grad;
+    }
+
+    template<std::floating_point T>
+    auto grad_crit(const lalib::DynVec<T> &grad) noexcept -> double {
+        auto gc = grad.norm2() / grad.size();
+        return gc;
+    }
+}
 
 // ==== Info ==== //
 
