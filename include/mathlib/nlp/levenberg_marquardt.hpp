@@ -37,39 +37,6 @@ namespace _lm_ {
             return s;
         }
     };
-
-    template<std::floating_point T>
-    auto infinity(const T&) noexcept -> T {
-        return std::numeric_limits<T>::infinity();
-    }
-    
-    template<std::floating_point T>
-    auto infinity(const lalib::DynVec<T>& x) noexcept -> lalib::DynVec<T> {
-        return lalib::DynVec<T>::filled(x.size(), std::numeric_limits<T>::infinity());
-    }
-
-    template<std::floating_point T>
-    auto params_resi2(const T& prev, const T& curr) noexcept -> double {
-        return std::pow(curr - prev, 2);
-    }
-
-    template<std::floating_point T>
-    auto params_resi2(const lalib::DynVec<T> &prev, const lalib::DynVec<T> &curr) noexcept -> double {
-        auto resi = curr - prev;
-        auto resi_tot = resi.dot(resi) / resi.size();
-        return resi_tot;
-    }
-
-    template<std::floating_point T>
-    auto grad_crit(const T& grad) noexcept -> double {
-        return grad;
-    }
-
-    template<std::floating_point T>
-    auto grad_crit(const lalib::DynVec<T> &grad) noexcept -> double {
-        auto gc = grad.norm2() / grad.size();
-        return gc;
-    }
 }
 
 inline LevenbregMarquardt::LevenbregMarquardt() noexcept {}
@@ -81,7 +48,7 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
 	auto x = init;
 	auto lambda = 1.0;
 
-    auto prev_x = _lm_::infinity(x);
+    auto prev_x = _internal_::infinity(x);
     auto prev_cost = std::numeric_limits<double>::infinity();
 	auto cost = func(x);
 	
@@ -110,9 +77,9 @@ inline auto LevenbregMarquardt::solve(T init, F&& func, size_t max_iter, double 
 			}
             
             // Convergence check
-            auto resi_x = _lm_::params_resi2(prev_x, x);
+            auto resi_x = _internal_::params_resi2(prev_x, x);
             auto resi = std::abs(cost - prev_cost);
-            auto gc = _lm_::grad_crit(grad);
+            auto gc = _internal_::grad_crit(grad);
             if (resi < cost_resi && resi_x < params_resi && gc < grad_crit) { 
                 auto result = NlpResult<T>(true, k, x, cost, resi); 
                 return result;
