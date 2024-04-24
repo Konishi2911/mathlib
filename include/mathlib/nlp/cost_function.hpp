@@ -66,8 +66,8 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
     }
 
     auto grad(const lalib::DynVec<T>& x) const -> Grad {
-        auto grad = std::vector<double>();
-        grad.reserve(x.size());
+        auto grad = std::vector<double>(x.size(), 0.0);
+        #pragma omp parallel for
         for (auto i = 0u; i < x.size(); ++i) {
             auto rdx = this->_grad_dx;
             auto xp = x;    xp[i] += rdx;
@@ -75,7 +75,7 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
             auto fp = this->_func(xp);
             auto fn = this->_func(xn);
             auto df = 0.5 * (fp / rdx - fn / rdx);
-            grad.emplace_back(std::move(df));
+            grad[i] = std::move(df);
         }
         return lalib::DynVec<T>(std::move(grad));
     }
@@ -83,6 +83,7 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
     auto hessian(const lalib::DynVec<T>& x) const -> lalib::DynMat<T> {
         auto n = x.size();
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
+        #pragma omp parallel for
         for (auto i = 0u; i < x.size(); ++i) {
             auto rdx = this->_hess_dx;
             for (auto j = 0u; j <= i; ++j) {
