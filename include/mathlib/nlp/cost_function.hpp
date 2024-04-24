@@ -85,9 +85,9 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
         #pragma omp parallel 
         {
+            #pragma omp for
             for (auto i = 0u; i < x.size(); ++i) {
                 auto rdx = this->_hess_dx;
-                #pragma omp for
                 for (auto j = 0u; j <= i; ++j) {
                     auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
                     auto x2 = x;    x2[i] += rdx;     x2[j] -= rdx;
