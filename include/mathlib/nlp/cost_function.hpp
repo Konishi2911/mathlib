@@ -83,25 +83,22 @@ struct NumericCostFunc<lalib::DynVec<T>, F> {
     auto hessian(const lalib::DynVec<T>& x) const -> lalib::DynMat<T> {
         auto n = x.size();
         auto hess = lalib::DynMat<T>::filled(0.0, n, n);
-        #pragma omp parallel 
-        {
-            #pragma omp for
-            for (auto i = 0u; i < x.size(); ++i) {
-                auto rdx = this->_hess_dx;
-                for (auto j = 0u; j <= i; ++j) {
-                    auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
-                    auto x2 = x;    x2[i] += rdx;     x2[j] -= rdx;
-                    auto x3 = x;    x3[i] -= rdx;     x3[j] += rdx;
-                    auto x4 = x;    x4[i] -= rdx;     x4[j] -= rdx;
-                    auto f1 = this->_func(x1);
-                    auto f2 = this->_func(x2);
-                    auto f3 = this->_func(x3);
-                    auto f4 = this->_func(x4);
+        #pragma omp parallel for
+        for (auto i = 0u; i < x.size(); ++i) {
+            auto rdx = this->_hess_dx;
+            for (auto j = 0u; j <= i; ++j) {
+                auto x1 = x;    x1[i] += rdx;     x1[j] += rdx;
+                auto x2 = x;    x2[i] += rdx;     x2[j] -= rdx;
+                auto x3 = x;    x3[i] -= rdx;     x3[j] += rdx;
+                auto x4 = x;    x4[i] -= rdx;     x4[j] -= rdx;
+                auto f1 = this->_func(x1);
+                auto f2 = this->_func(x2);
+                auto f3 = this->_func(x3);
+                auto f4 = this->_func(x4);
 
-                    auto ddx = rdx * rdx;
-                    hess(i, j) = 0.25 * ((f1 + f4) / ddx - (f2 + f3) / ddx);
-                    hess(j, i) = hess(i, j);
-                }
+                auto ddx = rdx * rdx;
+                hess(i, j) = 0.25 * ((f1 + f4) / ddx - (f2 + f3) / ddx);
+                hess(j, i) = hess(i, j);
             }
         }
         return hess;
