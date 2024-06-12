@@ -33,3 +33,8 @@ gtest_discover_tests(mathlib_nelder_mead_test)
 add_executable(mathlib_polynomial_test polynomial.cc)
 target_link_libraries(mathlib_polynomial_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
 gtest_discover_tests(mathlib_polynomial_test)
+
+# ODE
+add_executable(mathlib_rk_test ode/runge_kutta.cc)
+target_link_libraries(mathlib_rk_test PRIVATE  GTest::GTest GTest::Main)
+gtest_discover_tests(mathlib_rk_test)
