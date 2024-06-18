@@ -51,7 +51,7 @@ void RungeKutta<T, U, F>::advance(T dt) noexcept {
     auto&& k3 = this->_f(this->_x + 0.5 * dt * k2, this->_time + 0.5 * dt);
     auto&& k4 = this->_f(this->_x + dt * k3, this->_time + dt);
 
-    auto dx = (k1 + 2 * (k2 + k3) + k4) * dt / 6.0;
+    auto dx = (k1 + 2.0 * (k2 + k3) + k4) * dt / 6.0;
     this->_x = this->_x + dx;
     this->_time = this->_time + dt;
 }
