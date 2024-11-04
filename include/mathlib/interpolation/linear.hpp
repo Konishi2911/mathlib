@@ -26,6 +26,9 @@ public:
 	auto n_nodes() const noexcept -> size_t;
 	auto n_segments() const noexcept -> size_t;
 
+	/// @brief Returns the nodes of this function.
+	auto nodes() const noexcept -> const std::vector<std::pair<double, T>>&;
+
 	/// @brief Returns the domain of this function.
 	auto domain() const noexcept -> std::pair<double, double>;
 
@@ -76,6 +79,12 @@ template <typename T>
 inline auto Linear<T>::n_segments() const noexcept -> size_t
 {
     return this->_nodes.size() - 1;
+}
+
+template<typename T>
+inline auto Linear<T>::nodes() const noexcept -> const std::vector<std::pair<double, T>>&
+{
+	return this->_nodes;
 }
 
 template <typename T>
