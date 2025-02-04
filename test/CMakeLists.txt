@@ -38,3 +38,8 @@ gtest_discover_tests(mathlib_polynomial_test)
 add_executable(mathlib_rk_test ode/runge_kutta.cc)
 target_link_libraries(mathlib_rk_test PRIVATE  GTest::GTest GTest::Main)
 gtest_discover_tests(mathlib_rk_test)
+
+# Dual number
+add_executable(mathlib_dual_number_test dual_number.cc)
+target_link_libraries(mathlib_dual_number_test PRIVATE ${BLAS_LIBRARIES} ${OpenMP_CXX_LIBRARIES} GTest::GTest GTest::Main)
+gtest_discover_tests(mathlib_dual_number_test)
