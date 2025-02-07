@@ -11,8 +11,14 @@ struct Dual {
     T a;
     T b;
 
+    /// @brief  Default constructor.
     Dual() noexcept: a(0.0), b(0.0) {}
+
+    /// @brief  Constructor with two parameters for initializing the dual number.
     Dual(T a, T b) noexcept: a(a), b(b) {}
+
+    /// @brief  Create a dual number from a real number.
+    Dual(T a) noexcept: a(a), b(0.0) {}
 
 
     auto operator+=(const Dual<T>& x) noexcept -> Dual<T>& {
@@ -71,8 +77,15 @@ struct HyperDual2 {
     T c;
     T d;
 
+    /// @brief  Default constructor.
     HyperDual2() noexcept: a(0.0), b(0.0), c(0.0), d(0.0) {}
+
+    /// @brief  Constructor with four parameters for initializing the hyper-dual number.
     HyperDual2(T a, T b, T c, T d) noexcept: a(a), b(b), c(c), d(d) {}
+
+    /// @brief  Create a hyper-dual number from a real number.
+    HyperDual2(T a) noexcept: a(a), b(0.0), c(0.0), d(0.0) {}
+
 
     auto inv() const noexcept -> HyperDual2<T> {
         T inv_a = 1.0 / this->a;
