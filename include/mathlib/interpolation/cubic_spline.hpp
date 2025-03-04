@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <concepts>
+#include "mathlib/dual_number.hpp"
 #include "lalib/vec.hpp"
 #include "lalib/mat.hpp"
 #include "lalib/solver/tri_diag.hpp"
@@ -21,6 +22,8 @@ public:
 	CubicSpline(std::vector<std::pair<double, T>>&& data) noexcept;
 
 	auto operator()(double x) const noexcept -> T;
+	auto operator()(const Dual<double>& x) const noexcept -> Dual<T>;
+	auto operator()(const HyperDual2<double>& x) const noexcept -> HyperDual2<T>;
 
 	auto n_nodes() const noexcept -> size_t;
 	auto n_segments() const noexcept -> size_t;
@@ -54,6 +57,26 @@ inline auto CubicSpline<T>::operator()(double x) const noexcept -> T
 	auto x0 = this->_nodes[sid].first;
 	auto f = this->_c[sid][0] + this->_c[sid][1] * (x - x0) + this->_c[sid][2] * std::pow(x - x0, 2) + this->_c[sid][3] * std::pow(x - x0, 3);
 	return f;
+}
+
+template<typename T>
+inline auto CubicSpline<T>::operator()(const Dual<double>& x) const noexcept -> Dual<T>
+{
+	auto sid = this->__get_segment_id(x.a);
+	auto x0 = this->_nodes[sid].first;
+	auto f = this->_c[sid][0] + this->_c[sid][1] * (x.a - x0) + this->_c[sid][2] * std::pow(x.a - x0, 2) + this->_c[sid][3] * std::pow(x.a - x0, 3);
+	auto df = this->_c[sid][1] + 2.0 * this->_c[sid][2] * (x.a - x0) + 3.0 * this->_c[sid][3] * std::pow(x.a - x0, 2);
+	return Dual<T>(f, x.b * df);
+}
+
+template<typename T>
+inline auto CubicSpline<T>::operator()(const HyperDual2<double>& x) const noexcept -> HyperDual2<T> {
+	auto sid = this->__get_segment_id(x.a);
+	auto x0 = this->_nodes[sid].first;
+	auto f = this->_c[sid][0] + this->_c[sid][1] * (x.a - x0) + this->_c[sid][2] * std::pow(x.a - x0, 2) + this->_c[sid][3] * std::pow(x.a - x0, 3);
+	auto df = this->_c[sid][1] + 2.0 * this->_c[sid][2] * (x.a - x0) + 3.0 * this->_c[sid][3] * std::pow(x.a - x0, 2);
+	auto ddf = 2.0 * this->_c[sid][2] + 6.0 * this->_c[sid][3] * (x.a - x0);
+	return HyperDual2<T>(f, x.b * df, x.c * df, x.d * df + x.b * x.c * ddf);
 }
 
 template <typename T>
